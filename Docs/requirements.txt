@@ -1,0 +1,48 @@
+Core Technical Requirements
+NLP & Analysis Engine
+
+Resume parsing and analysis system to extract skills, experience, and qualifications
+Job description analysis to identify key requirements and match candidates
+ATS optimization algorithms to ensure resumes pass automated screening systems
+
+API Integrations
+
+Indeed API for job listings
+LinkedIn API for job postings and professional data
+ScaleDown integration for content compression and analysis
+
+AI/ML Components
+
+Resume-to-job matching algorithm
+Cover letter generation system (likely using LLMs)
+Personalization engine for tailoring applications
+
+Functional Requirements
+Must-Have Features
+
+Resume review and feedback system
+Job matching based on skills and preferences
+Automated cover letter drafting
+Interview preparation guidance
+Salary negotiation tips and data
+Application tracking dashboard
+
+Performance Targets
+
+Process 100+ job postings quickly
+Compress job descriptions by 80% using ScaleDown
+Personalize applications for 50+ roles efficiently
+Achieve 40% improvement in interview callback rates
+
+Deliverables
+
+Fully functional career chatbot with conversational interface
+Resume optimization tool with ATS compatibility checking
+Documentation including success stories and case studies
+Metrics showing application-to-interview conversion improvements
+
+Data & Security Needs
+
+Secure storage for user resumes and personal information
+Database for job postings and application tracking
+User authentication and privacy compliance (GDPR/CCPA)
