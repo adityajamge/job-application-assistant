@@ -66,7 +66,7 @@ export default function Home() {
               <QuickAction href="/apply" icon={<Briefcase className="w-4 h-4" />}>
                 Apply for job
               </QuickAction>
-              <QuickAction href="/review-resume" icon={<Search className="w-4 h-4" />}>
+              <QuickAction href="/resume-analysis" icon={<Search className="w-4 h-4" />}>
                 Review resume
               </QuickAction>
               <QuickAction href="/interview-prep" icon={<BookOpen className="w-4 h-4" />}>
