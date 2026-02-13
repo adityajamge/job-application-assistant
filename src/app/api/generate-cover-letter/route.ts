@@ -8,7 +8,6 @@ async function parsePDF(buffer: Buffer): Promise<string> {
     const pdfParser = new PDFParser();
 
     pdfParser.on("pdfParser_dataError", (errData: any) => {
-      console.error("PDF parsing error:", errData.parserError);
       reject(new Error("Failed to parse PDF"));
     });
 
@@ -49,9 +48,14 @@ export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
     const file = formData.get("resume") as File;
+    const position = formData.get("position") as string;
+    const companyName = formData.get("companyName") as string;
+    const jobDescription = formData.get("jobDescription") as string;
+    const hiringManager = formData.get("hiringManager") as string;
+    const tone = formData.get("tone") as string;
 
-    if (!file) {
-      return NextResponse.json({ error: "No file provided" }, { status: 400 });
+    if (!file || !position) {
+      return NextResponse.json({ error: "Resume and position are required" }, { status: 400 });
     }
 
     // Extract text from file
@@ -71,37 +75,37 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Could not extract text from resume" }, { status: 400 });
     }
 
-    // Log extracted text length and first 500 characters for debugging
-    console.log("=== RESUME TEXT EXTRACTION ===");
-    console.log("File type:", file.type);
-    console.log("Text length:", resumeText.length);
-    console.log("First 500 characters:", resumeText.substring(0, 500));
-    console.log("Has @ symbol:", resumeText.includes("@"));
-    console.log("Has phone patterns:", /\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/.test(resumeText));
-    console.log("==============================");
-
-    // Use AI Factory to get the appropriate provider
-    // It will automatically use the first available API key (Groq > Gemini > OpenAI)
+    // Get AI provider
     const aiProvider = AIFactory.getDefaultProvider();
     
-    // Analyze resume using the selected AI provider
-    const analysis = await aiProvider.analyzeResume(resumeText);
+    // Generate cover letter
+    const coverLetter = await aiProvider.generateCoverLetter({
+      resumeText,
+      position,
+      companyName,
+      jobDescription,
+      hiringManager,
+      tone
+    });
     
-    return NextResponse.json(analysis);
+    return NextResponse.json(coverLetter);
     
   } catch (error) {
-    console.error("Resume analysis error:", error);
+    console.error("Cover letter generation error:", error);
     
-    // Check if it's a validation error
-    if (error instanceof Error && error.message === "NOT_A_RESUME") {
-      return NextResponse.json(
-        { error: "This doesn't appear to be a resume. Please upload a valid resume or CV document." },
-        { status: 400 }
-      );
+    // Provide more specific error message
+    let errorMessage = "Failed to generate cover letter. Please try again.";
+    
+    if (error instanceof Error) {
+      if (error.message.includes("parse JSON")) {
+        errorMessage = "AI response format error. Please try again or simplify your inputs.";
+      } else if (error.message.includes("API")) {
+        errorMessage = "AI service error. Please check your API key and try again.";
+      }
     }
     
     return NextResponse.json(
-      { error: "Failed to analyze resume. Please try again." },
+      { error: errorMessage },
       { status: 500 }
     );
   }

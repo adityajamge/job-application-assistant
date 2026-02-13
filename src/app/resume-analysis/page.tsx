@@ -7,7 +7,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
-import { Upload, FileText, Loader2, CheckCircle2, XCircle, AlertCircle, Download, ArrowLeft } from "lucide-react";
+import { Upload, FileText, Loader2, CheckCircle2, XCircle, AlertCircle, Download, ArrowLeft, FileEdit, ArrowRight } from "lucide-react";
 import Link from "next/link";
 
 interface AnalysisResult {
@@ -128,7 +128,7 @@ export default function ResumeAnalysisPage() {
     <div className="flex flex-col min-h-screen bg-background">
       <Header />
 
-      <main className="flex-1 container py-12">
+      <main className="flex-1 container py-12 mt-16">
         <div className="max-w-5xl mx-auto">
           {/* Header */}
           <div className="mb-8">
@@ -369,6 +369,41 @@ export default function ResumeAnalysisPage() {
                       </li>
                     ))}
                   </ul>
+                </CardContent>
+              </Card>
+
+              {/* Next Steps - Generate Cover Letter */}
+              <Card className="border-2 border-primary/20 bg-primary/5">
+                <CardContent className="p-6">
+                  <h3 className="text-xl font-semibold mb-3 flex items-center gap-2">
+                    <FileEdit className="w-5 h-5" />
+                    Ready for the Next Step?
+                  </h3>
+                  <p className="text-muted-foreground mb-4">
+                    Your resume looks good! Now generate a professional cover letter for your job applications.
+                  </p>
+                  <Button 
+                    size="lg" 
+                    className="w-full sm:w-auto"
+                    onClick={() => {
+                      // Store resume file in sessionStorage
+                      if (file) {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                          sessionStorage.setItem('resumeFile', JSON.stringify({
+                            name: file.name,
+                            type: file.type,
+                            data: reader.result
+                          }));
+                          window.location.href = '/cover-letter?from=resume-analyzer';
+                        };
+                        reader.readAsDataURL(file);
+                      }
+                    }}
+                  >
+                    Generate Cover Letter
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
                 </CardContent>
               </Card>
             </div>

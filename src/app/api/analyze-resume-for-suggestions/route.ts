@@ -71,35 +71,29 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Could not extract text from resume" }, { status: 400 });
     }
 
-    // Log extracted text length and first 500 characters for debugging
-    console.log("=== RESUME TEXT EXTRACTION ===");
-    console.log("File type:", file.type);
-    console.log("Text length:", resumeText.length);
-    console.log("First 500 characters:", resumeText.substring(0, 500));
-    console.log("Has @ symbol:", resumeText.includes("@"));
-    console.log("Has phone patterns:", /\d{3}[-.\s]?\d{3}[-.\s]?\d{4}/.test(resumeText));
-    console.log("==============================");
-
-    // Use AI Factory to get the appropriate provider
-    // It will automatically use the first available API key (Groq > Gemini > OpenAI)
+    // Get AI provider
     const aiProvider = AIFactory.getDefaultProvider();
     
-    // Analyze resume using the selected AI provider
-    const analysis = await aiProvider.analyzeResume(resumeText);
+    // First, validate if this is actually a resume
+    try {
+      await aiProvider.analyzeResume(resumeText);
+    } catch (error) {
+      if (error instanceof Error && error.message === "NOT_A_RESUME") {
+        return NextResponse.json(
+          { error: "This doesn't appear to be a resume. Please upload a valid resume or CV document." },
+          { status: 400 }
+        );
+      }
+      throw error; // Re-throw other errors
+    }
     
-    return NextResponse.json(analysis);
+    // If validation passed, analyze resume for suggestions
+    const suggestions = await aiProvider.analyzeSuggestions(resumeText);
+    
+    return NextResponse.json(suggestions);
     
   } catch (error) {
     console.error("Resume analysis error:", error);
-    
-    // Check if it's a validation error
-    if (error instanceof Error && error.message === "NOT_A_RESUME") {
-      return NextResponse.json(
-        { error: "This doesn't appear to be a resume. Please upload a valid resume or CV document." },
-        { status: 400 }
-      );
-    }
-    
     return NextResponse.json(
       { error: "Failed to analyze resume. Please try again." },
       { status: 500 }
