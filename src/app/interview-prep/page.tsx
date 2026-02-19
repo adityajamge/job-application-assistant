@@ -53,6 +53,7 @@ export default function InterviewPrepPage() {
   const [isListening, setIsListening] = useState(false);
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [currentTranscript, setCurrentTranscript] = useState("");
+  const [accumulatedTranscript, setAccumulatedTranscript] = useState(""); // NEW: Store all accumulated text
   const [speechSupported, setSpeechSupported] = useState(true);
   const [showFeedback, setShowFeedback] = useState(false);
   const [currentFeedback, setCurrentFeedback] = useState("");
@@ -63,6 +64,7 @@ export default function InterviewPrepPage() {
   const [isTypingFeedback, setIsTypingFeedback] = useState(false);
   
   const recognitionRef = useRef<any>(null);
+  const finalTranscriptRef = useRef<string>(""); // NEW: Track finalized text
 
   useEffect(() => {
     const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
@@ -84,20 +86,46 @@ export default function InterviewPrepPage() {
     recognition.lang = "en-US";
 
     recognition.onresult = (event: any) => {
-      let transcript = "";
+      let interimTranscript = "";
+      let finalTranscript = "";
+      
       for (let i = event.resultIndex; i < event.results.length; i++) {
-        transcript += event.results[i][0].transcript;
+        const transcript = event.results[i][0].transcript;
+        if (event.results[i].isFinal) {
+          finalTranscript += transcript + " ";
+        } else {
+          interimTranscript += transcript;
+        }
       }
-      setCurrentTranscript(transcript);
+      
+      // Accumulate final transcripts
+      if (finalTranscript) {
+        finalTranscriptRef.current += finalTranscript;
+        setAccumulatedTranscript(finalTranscriptRef.current);
+      }
+      
+      // Show interim + accumulated
+      setCurrentTranscript(finalTranscriptRef.current + interimTranscript);
     };
 
     recognition.onerror = (event: any) => {
       console.error("Speech recognition error:", event.error);
+      if (event.error === 'no-speech') {
+        // Don't stop on no-speech, just continue
+        return;
+      }
       setIsListening(false);
     };
 
     recognition.onend = () => {
-      setIsListening(false);
+      // Auto-restart if still supposed to be listening
+      if (isListening) {
+        try {
+          recognition.start();
+        } catch (e) {
+          setIsListening(false);
+        }
+      }
     };
 
     recognitionRef.current = recognition;
@@ -107,7 +135,7 @@ export default function InterviewPrepPage() {
         recognitionRef.current.stop();
       }
     };
-  }, [speechSupported]);
+  }, [speechSupported, isListening]);
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -118,14 +146,26 @@ export default function InterviewPrepPage() {
     setLoading(true);
 
     try {
-      const reader = new FileReader();
-      reader.onload = (event) => {
-        setResumeText(event.target?.result as string);
-        setLoading(false);
-      };
-      reader.readAsText(file);
+      // Send file to backend for parsing
+      const formData = new FormData();
+      formData.append('resume', file);
+
+      const response = await fetch('/api/extract-resume-text', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to parse resume');
+      }
+
+      const data = await response.json();
+      
+      // Store the parsed text
+      setResumeText(data.text);
+      setLoading(false);
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || 'Failed to read resume file');
       setLoading(false);
     }
   };
@@ -439,10 +479,24 @@ export default function InterviewPrepPage() {
       recognitionRef.current.stop();
       setIsListening(false);
     } else {
-      setCurrentTranscript("");
       setError(""); // Clear any previous errors
-      recognitionRef.current.start();
-      setIsListening(true);
+      try {
+        recognitionRef.current.start();
+        setIsListening(true);
+      } catch (e) {
+        console.error("Failed to start recognition:", e);
+        setError("Failed to start voice recognition");
+      }
+    }
+  };
+
+  const clearTranscript = () => {
+    setCurrentTranscript("");
+    setAccumulatedTranscript("");
+    finalTranscriptRef.current = "";
+    if (isListening && recognitionRef.current) {
+      recognitionRef.current.stop();
+      setIsListening(false);
     }
   };
 
@@ -485,7 +539,10 @@ export default function InterviewPrepPage() {
         feedback: newFeedback,
       });
 
+      // Clear all transcript data
       setCurrentTranscript("");
+      setAccumulatedTranscript("");
+      finalTranscriptRef.current = "";
       
       // Show feedback with fade-in animation
       setShowFeedback(true);
@@ -529,7 +586,10 @@ export default function InterviewPrepPage() {
         setStep(4); // Interview complete
       }
 
+      // Clear all transcript data again (in case)
       setCurrentTranscript("");
+      setAccumulatedTranscript("");
+      finalTranscriptRef.current = "";
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -549,7 +609,10 @@ export default function InterviewPrepPage() {
       feedback: newFeedback,
     });
 
+    // Clear all transcript data
     setCurrentTranscript("");
+    setAccumulatedTranscript("");
+    finalTranscriptRef.current = "";
     
     // Fade out current question
     setIsTransitioning(true);
@@ -580,6 +643,8 @@ export default function InterviewPrepPage() {
     setStep(1);
     setSession(null);
     setCurrentTranscript("");
+    setAccumulatedTranscript("");
+    finalTranscriptRef.current = "";
     setResumeFile(null);
     setResumeText("");
     setJobDescription("");
@@ -920,13 +985,24 @@ export default function InterviewPrepPage() {
             {/* Your Answer - Picture-in-Picture */}
             {currentTranscript && (
               <div className="absolute bottom-4 right-4 w-80 bg-[#2d2d2d] rounded-lg p-4 shadow-2xl border border-gray-700">
-                <div className="flex items-start gap-3">
-                  <div className="w-10 h-10 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
-                    <span className="text-white text-xs font-medium">You</span>
+                <div className="flex items-start justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center flex-shrink-0">
+                      <span className="text-white text-xs font-medium">You</span>
+                    </div>
+                    <span className="text-gray-400 text-xs">Your Answer</span>
                   </div>
-                  <div className="flex-1">
-                    <p className="text-white text-sm leading-relaxed">{currentTranscript}</p>
-                  </div>
+                  <Button
+                    onClick={clearTranscript}
+                    variant="ghost"
+                    size="sm"
+                    className="h-6 px-2 text-xs text-gray-400 hover:text-white"
+                  >
+                    Clear
+                  </Button>
+                </div>
+                <div className="max-h-40 overflow-y-auto">
+                  <p className="text-white text-sm leading-relaxed whitespace-pre-wrap">{currentTranscript}</p>
                 </div>
               </div>
             )}

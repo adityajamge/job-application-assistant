@@ -11,15 +11,40 @@ export async function GET() {
 
     const genAI = new GoogleGenerativeAI(apiKey);
     
-    // Try gemini-pro (the stable free model)
-    const model = genAI.getGenerativeModel({ model: "gemini-pro" });
-    const result = await model.generateContent("Say hello");
+    // Try different models to see which one works
+    const modelsToTry = [
+      "gemini-flash-latest",
+      "gemini-pro-latest",
+      "gemini-1.5-flash-8b",
+      "gemini-1.5-flash",
+      "gemini-1.5-pro",
+      "gemini-pro"
+    ];
+    
+    const results = [];
+    
+    for (const modelName of modelsToTry) {
+      try {
+        const model = genAI.getGenerativeModel({ model: modelName });
+        const result = await model.generateContent("Say hello");
+        results.push({
+          model: modelName,
+          success: true,
+          response: result.response.text()
+        });
+        break; // Stop at first working model
+      } catch (error: any) {
+        results.push({
+          model: modelName,
+          success: false,
+          error: error.message
+        });
+      }
+    }
     
     return NextResponse.json({ 
-      success: true, 
-      message: "API key is valid!",
-      model: "gemini-pro",
-      response: result.response.text()
+      results,
+      workingModel: results.find(r => r.success)?.model || null
     });
   } catch (error: any) {
     return NextResponse.json({ 

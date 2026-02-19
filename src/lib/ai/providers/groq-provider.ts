@@ -9,7 +9,8 @@ import {
   InterviewQuestionsResponse,
   InterviewTypeAnalysis,
   EvaluateAnswerRequest,
-  EvaluateAnswerResponse
+  EvaluateAnswerResponse,
+  ATSCheckResponse
 } from "../ai-service";
 
 export class GroqProvider implements AIProvider {
@@ -312,15 +313,23 @@ JSON: {"questions":[{"question":"...","category":"${data.interviewType || 'Mixed
       messages: [
         {
           role: "system",
-          content: "Provide brief feedback. Return JSON only."
+          content: "You are an interview coach. Evaluate interview answers and provide constructive feedback. Return JSON only."
         },
         {
           role: "user",
-          content: `Q: ${data.question}
-A: ${data.answer}
-Resume: ${data.resumeText.substring(0, 400)}
+          content: `Evaluate this interview answer:
 
-Give 2-3 sentence feedback. Be constructive.
+Question: ${data.question}
+
+Answer: ${data.answer}
+
+Provide constructive feedback in 2-3 sentences. Focus on:
+- Content quality and completeness
+- Technical accuracy
+- Communication clarity
+- Areas for improvement
+
+Be encouraging but honest. Do NOT mention resume or unrelated information.
 
 JSON: {"feedback":"..."}`
         }
@@ -341,6 +350,79 @@ JSON: {"feedback":"..."}`
       return parsed as EvaluateAnswerResponse;
     } catch (error) {
       console.error("Failed to parse feedback:", responseText);
+      throw new Error("Could not parse JSON from AI response");
+    }
+  }
+
+  async checkATSCompatibility(resumeText: string, jobDescription?: string): Promise<ATSCheckResponse> {
+    const completion = await this.client.chat.completions.create({
+      messages: [
+        {
+          role: "system",
+          content: "You are an ATS (Applicant Tracking System) analyzer. Analyze resumes for ATS compatibility and return ONLY valid JSON."
+        },
+        {
+          role: "user",
+          content: `Analyze this resume for ATS compatibility and provide a detailed report.
+
+Resume Content:
+${resumeText}
+
+${jobDescription ? `Job Description for keyword matching:\n${jobDescription}\n` : ''}
+
+Analyze the following aspects and provide a JSON response:
+
+1. ATS Score (0-100) based on overall compatibility
+2. Critical Issues (blocking issues that will likely cause rejection)
+3. Warnings (issues that may reduce ranking)
+4. Passed Checks (things done correctly)
+5. Keyword Analysis (if job description provided)
+
+Check for:
+- Standard section headers (Contact, Summary/Objective, Experience, Education, Skills)
+- Contact information (email, phone)
+- Date formats (should be MM/YYYY or Month YYYY)
+- Formatting issues (avoid tables, columns, text boxes, headers/footers)
+- File compatibility indicators (simple text structure)
+- Bullet points usage
+- Keywords matching (if job description provided)
+
+Return ONLY valid JSON in this exact format:
+{
+  "score": number (0-100),
+  "criticalIssues": [
+    { "issue": "description", "fix": "how to fix it" }
+  ],
+  "warnings": [
+    { "issue": "description", "fix": "how to fix it" }
+  ],
+  "passed": [
+    "check description"
+  ],
+  "keywordAnalysis": {
+    "matchedKeywords": ["keyword1", "keyword2"],
+    "missingKeywords": ["keyword3", "keyword4"],
+    "matchRate": number (0-100)
+  } or null
+}`
+        }
+      ],
+      model: "llama-3.3-70b-versatile",
+      temperature: 0.3,
+      max_tokens: 2000,
+    });
+
+    const responseText = completion.choices[0]?.message?.content || "";
+    
+    try {
+      const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error("No JSON found in response");
+      }
+      const parsed = JSON.parse(jsonMatch[0]);
+      return parsed as ATSCheckResponse;
+    } catch (error) {
+      console.error("Failed to parse ATS check:", responseText);
       throw new Error("Could not parse JSON from AI response");
     }
   }

@@ -1,87 +1,153 @@
-# Job Application Assistant
+# Job Application Assistant 🚀
 
-An AI-powered platform to help job seekers optimize their resumes, find jobs, and prepare for interviews. Built with Next.js 16, TypeScript, and modern AI technologies.
+> An AI-powered platform to help job seekers optimize their resumes, generate cover letters, check ATS compatibility, and prepare for interviews.
 
-![Next.js](https://img.shields.io/badge/Next.js-16-black)
-![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8)
-![License](https://img.shields.io/badge/License-MIT-green)
+![Next.js](https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-blue?style=for-the-badge&logo=typescript)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4-38bdf8?style=for-the-badge&logo=tailwind-css)
+![React](https://img.shields.io/badge/React-19-61dafb?style=for-the-badge&logo=react)
+![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
+
+---
+
+## 📋 Table of Contents
+
+- [Features](#-features)
+- [Demo](#-demo)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Usage](#-usage)
+- [Project Structure](#-project-structure)
+- [API Documentation](#-api-documentation)
+- [Deployment](#-deployment)
+- [Contributing](#-contributing)
+- [License](#-license)
+
+---
 
 ## ✨ Features
 
-### 🎯 Resume Analyzer (Implemented)
-- **AI-Powered Analysis**: Intelligent resume evaluation using Groq AI (Llama 3.3 70B)
-- **Multi-Format Support**: Upload PDF, DOCX, or TXT files
-- **Comprehensive Scoring**: 
-  - Overall Score
-  - ATS Compatibility Score
-  - Formatting Score
-  - Content Quality Score
-  - Keyword Optimization Score
-- **Detailed Feedback**: Section-by-section analysis with actionable suggestions
-- **Resume Validation**: Smart detection to ensure only resumes are analyzed
-- **Beautiful UI**: Modern, responsive interface with dark/light mode
+### 🎯 AI Resume Analyzer
+Comprehensive resume analysis with actionable feedback
 
-### 🚀 Coming Soon
-- Job Search & Matching
-- Automated Job Applications
-- Cover Letter Generator
-- Interview Preparation
-- Salary Negotiation Tips
+- **Multi-Format Support**: Upload PDF, DOCX, or TXT files (max 5MB)
+- **5 Scoring Metrics**: Overall, ATS, Formatting, Content, Keywords (0-100 scale)
+- **Smart Validation**: Ensures uploaded file is actually a resume
+- **Section Analysis**: Contact info, structure, content, ATS compatibility
+- **Quick Wins**: Immediate improvements you can make
+- **Detailed Suggestions**: Comprehensive feedback for optimization
+- **Dark/Light Mode**: Beautiful UI with theme support
 
-## 🏗️ Architecture
+### ✉️ Cover Letter Generator
+AI-powered personalized cover letter creation
 
-### AI Abstraction Layer
-The application uses a clean abstraction pattern for AI provider flexibility:
+- **Smart Position Suggestions**: AI analyzes resume and suggests 3 suitable positions
+- **Auto Contact Extraction**: Automatically pulls contact info from resume
+- **Company-Specific or General**: Create targeted or general letters
+- **Tone Customization**: Professional, Enthusiastic, or Formal
+- **Professional Export**: Download as formatted DOCX file
+- **Quick Copy**: Copy to clipboard for easy pasting
+- **4-Step Wizard**: Simple, guided process
 
+### 🎯 ATS Optimization Tool
+Ensure your resume passes Applicant Tracking Systems
+
+- **ATS Compatibility Score**: 0-100 rating with color-coded feedback
+- **Issue Categorization**: Critical, Warnings, and Passed checks
+- **Keyword Analysis**: Match your resume against job descriptions
+- **Missing Keywords**: Identify gaps in your resume
+- **Match Rate**: See percentage of job description keywords found
+- **Actionable Fixes**: Specific instructions for each issue
+- **Job Description Support**: Optional JD input for better analysis
+
+### 🎤 Interview Preparation
+Practice interviews with AI-generated questions and feedback
+
+- **Resume-Based Questions**: AI generates 5 relevant questions from your resume
+- **Interview Type Selection**: Technical, Behavioral, System Design, or Field-specific
+- **Voice Recording**: Speak your answers naturally with speech-to-text
+- **Real-Time Transcription**: See your words as you speak
+- **Text Accumulation**: Never lose your answer text (even with pauses)
+- **Instant AI Feedback**: Get constructive feedback after each answer
+- **Resume-Job Matching**: Validates resume matches job description (30%+ relevance)
+- **Session Review**: Review all questions, answers, and feedback
+
+---
+
+## 🎬 Demo
+
+### Resume Analyzer
 ```
-src/lib/ai/
-├── ai-service.ts              # Interface definitions
-├── ai-factory.ts              # Provider selection logic
-└── providers/
-    ├── groq-provider.ts       # Groq implementation (primary)
-    └── gemini-provider.ts     # Gemini implementation (backup)
+Upload Resume → AI Analysis (4-6s) → Detailed Scores & Feedback
 ```
 
-**Benefits:**
-- ✅ Easy to switch AI providers (just change API key)
-- ✅ Easy to add new providers (implement interface)
-- ✅ No code changes needed when switching providers
-- ✅ Type-safe with TypeScript
+### Cover Letter Generator
+```
+Upload Resume → AI Suggests Positions → Select & Customize → Generate Letter → Download DOCX
+```
 
-### Tech Stack
+### ATS Optimization
+```
+Upload Resume + Job Description → ATS Analysis (3-5s) → Score + Issues + Keywords
+```
 
-**Frontend:**
-- Next.js 16 (App Router)
-- React 19
-- TypeScript 5
-- Tailwind CSS 4
-- shadcn/ui components
-- Lucide icons
+### Interview Prep
+```
+Upload Resume → Select Interview Type → Practice 5 Questions → Get AI Feedback → Review Session
+```
 
-**Backend:**
-- Next.js API Routes
-- Groq AI (Llama 3.3 70B) - Primary
-- Google Gemini 1.5 Flash - Backup
-- pdf2json (PDF parsing)
-- mammoth (DOCX parsing)
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
+- **UI Library**: [React 19](https://react.dev/)
+- **Language**: [TypeScript 5](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 4](https://tailwindcss.com/)
+- **Components**: [shadcn/ui](https://ui.shadcn.com/)
+- **Icons**: [Lucide React](https://lucide.dev/)
+- **Theme**: [next-themes](https://github.com/pacocoursey/next-themes)
+
+### Backend
+- **Runtime**: Node.js 18+
+- **API**: Next.js API Routes
+- **PDF Parsing**: [pdf2json](https://www.npmjs.com/package/pdf2json)
+- **DOCX Parsing**: [mammoth](https://www.npmjs.com/package/mammoth)
+- **DOCX Generation**: [docx](https://www.npmjs.com/package/docx)
+
+### AI Services
+- **Primary**: [Groq](https://groq.com/) (Llama 3.3 70B Versatile) - FREE ⚡
+- **Backup**: [Google Gemini](https://ai.google.dev/) (Gemini 1.5 Flash)
+- **Voice**: Browser Web Speech API
+
+### Development
+- **Package Manager**: npm
+- **Linting**: ESLint
+- **Type Checking**: TypeScript
+- **Version Control**: Git
+
+---
 
 ## 🚀 Getting Started
 
 ### Prerequisites
-- Node.js 18+ 
-- npm, yarn, pnpm, or bun
-- Groq API key (FREE, no credit card required)
+
+- **Node.js** 18 or higher
+- **npm**, yarn, pnpm, or bun
+- **Groq API Key** (FREE, no credit card required)
 
 ### Installation
 
 1. **Clone the repository**
+
 ```bash
-git clone <repository-url>
+git clone https://github.com/yourusername/job-application-assistant.git
 cd job-application-assistant
 ```
 
 2. **Install dependencies**
+
 ```bash
 npm install
 ```
@@ -98,75 +164,106 @@ GROQ_API_KEY=your_groq_api_key_here
 GEMINI_API_KEY=your_gemini_api_key_here
 ```
 
-**Get your FREE Groq API key:**
-1. Visit [https://console.groq.com/keys](https://console.groq.com/keys)
-2. Sign up (no credit card required)
-3. Create a new API key
-4. Copy and paste into `.env.local`
+4. **Get your FREE Groq API key**
 
-4. **Run the development server**
+- Visit: [https://console.groq.com/keys](https://console.groq.com/keys)
+- Sign up (no credit card required)
+- Create a new API key
+- Copy and paste into `.env.local`
+
+5. **Run the development server**
+
 ```bash
 npm run dev
 ```
 
-5. **Open your browser**
+6. **Open your browser**
 
 Navigate to [http://localhost:3000](http://localhost:3000)
 
+### Build for Production
+
+```bash
+npm run build
+npm start
+```
+
+---
+
 ## 📖 Usage
 
-### Resume Analyzer
+### 1. Resume Analyzer
 
-1. Go to the homepage
-2. Click on "Review my resume" card
-3. Upload your resume (PDF, DOCX, or TXT - max 5MB)
-4. Click "Analyze Resume"
-5. View your detailed analysis with scores and suggestions
+**Steps:**
+1. Click "AI Resume Analysis" on homepage
+2. Upload your resume (PDF, DOCX, or TXT)
+3. Wait 4-6 seconds for analysis
+4. Review scores and feedback
+5. Implement suggestions
 
-### Analysis Includes:
-- **Overall Score**: Weighted average of all metrics
-- **ATS Score**: How well your resume passes Applicant Tracking Systems
-- **Formatting Score**: Structure and visual organization
-- **Content Score**: Quality of information and achievements
-- **Keyword Score**: Industry-relevant terms presence
-- **Quick Wins**: Easy improvements you can make immediately
-- **Detailed Suggestions**: Comprehensive feedback for each section
+**What You Get:**
+- Overall Score (0-100)
+- ATS Compatibility Score
+- Formatting Score
+- Content Quality Score
+- Keyword Optimization Score
+- Quick wins for immediate improvements
+- Detailed suggestions for each section
 
-## 🔧 Configuration
+### 2. Cover Letter Generator
 
-### Switching AI Providers
+**Steps:**
+1. Click "Cover Letter Generator" on homepage
+2. Upload your resume
+3. Select from AI-suggested positions or enter custom
+4. Add company details (optional)
+5. Choose tone (Professional/Enthusiastic/Formal)
+6. Generate and download letter
 
-The system automatically uses the first available API key in this order:
-1. Groq (if `GROQ_API_KEY` is set)
-2. Gemini (if `GEMINI_API_KEY` is set)
+**What You Get:**
+- Personalized cover letter (300-400 words)
+- Professional DOCX format
+- Properly formatted with contact info
+- Ready to send
 
-To switch providers, simply add/remove API keys in `.env.local`.
+### 3. ATS Optimization
 
-### Adding New AI Providers
+**Steps:**
+1. Click "ATS Optimization" on homepage
+2. Upload your resume
+3. Optionally paste job description
+4. Wait 3-5 seconds for analysis
+5. Review score and issues
+6. Fix critical issues first
 
-1. Create a new provider class in `src/lib/ai/providers/`
-2. Implement the `AIProvider` interface
-3. Add the provider to `AIFactory` in `src/lib/ai/ai-factory.ts`
-4. Add the API key to `.env.local`
+**What You Get:**
+- ATS Compatibility Score (0-100)
+- Critical issues (must fix)
+- Warnings (should fix)
+- Passed checks (what's good)
+- Keyword analysis (if JD provided)
+- Specific fix instructions
 
-Example:
-```typescript
-// src/lib/ai/providers/openai-provider.ts
-import OpenAI from "openai";
-import { AIProvider, ResumeAnalysis } from "../ai-service";
+### 4. Interview Preparation
 
-export class OpenAIProvider implements AIProvider {
-  private client: OpenAI;
+**Steps:**
+1. Click "Interview Preparation" on homepage
+2. Upload your resume
+3. Optionally add job description
+4. Select interview type
+5. Practice with 5 AI-generated questions
+6. Record answers via voice
+7. Receive instant feedback
+8. Review complete session
 
-  constructor(apiKey: string) {
-    this.client = new OpenAI({ apiKey });
-  }
+**What You Get:**
+- 5 relevant interview questions
+- Voice recording capability
+- Real-time transcription
+- Instant AI feedback
+- Session summary
 
-  async analyzeResume(resumeText: string): Promise<ResumeAnalysis> {
-    // Implementation
-  }
-}
-```
+---
 
 ## 📁 Project Structure
 
@@ -174,101 +271,345 @@ export class OpenAIProvider implements AIProvider {
 job-application-assistant/
 ├── src/
 │   ├── app/
-│   │   ├── api/
-│   │   │   └── analyze-resume/
-│   │   │       └── route.ts          # Resume analysis API endpoint
-│   │   ├── resume-analysis/
-│   │   │   └── page.tsx              # Resume analyzer UI
-│   │   ├── layout.tsx                # Root layout with theme
-│   │   ├── page.tsx                  # Landing page
-│   │   └── globals.css               # Global styles
+│   │   ├── api/                      # API Routes
+│   │   │   ├── analyze-resume/
+│   │   │   ├── analyze-resume-for-suggestions/
+│   │   │   ├── generate-cover-letter/
+│   │   │   ├── download-cover-letter/
+│   │   │   ├── ats-check/
+│   │   │   ├── extract-resume-text/
+│   │   │   ├── analyze-interview-types/
+│   │   │   ├── generate-interview-questions/
+│   │   │   └── evaluate-answer/
+│   │   ├── resume-analysis/          # Resume Analyzer Page
+│   │   ├── cover-letter/             # Cover Letter Generator Page
+│   │   ├── ats-optimization/         # ATS Optimization Page
+│   │   ├── interview-prep/           # Interview Prep Page
+│   │   ├── layout.tsx                # Root Layout
+│   │   ├── page.tsx                  # Homepage
+│   │   └── globals.css               # Global Styles
 │   ├── components/
-│   │   ├── ui/                       # shadcn/ui components
-│   │   ├── header.tsx                # Navigation header
+│   │   ├── ui/                       # shadcn/ui Components (40+)
+│   │   ├── header.tsx                # Navigation Header
 │   │   ├── footer.tsx                # Footer
-│   │   └── theme-toggle.tsx          # Dark/light mode toggle
+│   │   └── theme-toggle.tsx          # Dark/Light Mode Toggle
 │   ├── lib/
 │   │   ├── ai/
-│   │   │   ├── ai-service.ts         # AI interface definitions
-│   │   │   ├── ai-factory.ts         # Provider factory
+│   │   │   ├── ai-service.ts         # AI Interface Definitions
+│   │   │   ├── ai-factory.ts         # Provider Selection Logic
 │   │   │   └── providers/
-│   │   │       ├── groq-provider.ts  # Groq implementation
-│   │   │       └── gemini-provider.ts # Gemini implementation
-│   │   └── utils.ts                  # Utility functions
+│   │   │       ├── groq-provider.ts  # Groq Implementation
+│   │   │       └── gemini-provider.ts # Gemini Implementation
+│   │   └── utils.ts                  # Utility Functions
 │   └── hooks/
-│       └── use-mobile.tsx            # Mobile detection hook
-├── public/                           # Static assets
+│       └── use-mobile.tsx            # Mobile Detection Hook
+├── public/                           # Static Assets
 ├── explanatory/                      # Documentation
-│   ├── resume-analyzer-documentation.html
-│   └── resume-analyzer-visual-diagram.html
-├── .env.local                        # Environment variables (not in git)
+│   ├── ats-optimization-implementation.md
+│   ├── cover-letter-implementation.md
+│   ├── interview-prep-implementation.md
+│   └── resume-job-matching-validation.md
+├── .env.local                        # Environment Variables (not in git)
+├── .gitignore
 ├── package.json
 ├── tsconfig.json
-└── README.md
+├── tailwind.config.ts
+├── next.config.ts
+├── components.json
+├── README.md
+├── PROJECT_DOCUMENTATION.md          # Complete Technical Docs
+└── USER_MANUAL.md                    # End-User Guide
 ```
 
-## 🎨 UI Components
+---
 
-This project uses [shadcn/ui](https://ui.shadcn.com/) components:
-- Accordion, Alert, Avatar, Badge, Breadcrumb
-- Button, Calendar, Card, Carousel, Chart
-- Checkbox, Dialog, Dropdown Menu, Form
-- Input, Label, Progress, Select, Separator
-- Sheet, Skeleton, Slider, Switch, Table
-- Tabs, Textarea, Toggle, Tooltip
-- And many more...
+## 📝 API Documentation
 
-## 🔒 Security
+### Resume Analysis
 
-- API keys are stored in `.env.local` (not committed to git)
-- File size validation (max 5MB)
-- File type validation (PDF, DOCX, TXT only)
-- Resume validation (prevents non-resume uploads)
-- Error handling for all API calls
-- Secure server-side processing
+**Endpoint:** `POST /api/analyze-resume`
+
+**Request:**
+```typescript
+Content-Type: multipart/form-data
+Body: {
+  resume: File (PDF/DOCX/TXT, max 5MB)
+}
+```
+
+**Response:**
+```typescript
+{
+  overallScore: number,
+  atsScore: number,
+  formattingScore: number,
+  contentScore: number,
+  keywordScore: number,
+  contactInfo: { status, items },
+  structure: { status, items },
+  content: { status, items },
+  atsCompatibility: { status, items },
+  quickWins: string[],
+  suggestions: string[]
+}
+```
+
+### Cover Letter Generation
+
+**Endpoint:** `POST /api/generate-cover-letter`
+
+**Request:**
+```typescript
+Content-Type: multipart/form-data
+Body: {
+  resume: File,
+  position: string,
+  companyName?: string,
+  jobDescription?: string,
+  hiringManager?: string,
+  tone?: "professional" | "enthusiastic" | "formal"
+}
+```
+
+**Response:**
+```typescript
+{
+  coverLetter: string,
+  contactInfo: { name, email, phone, linkedin, location },
+  date: string,
+  companyName: string,
+  position: string,
+  hiringManager?: string
+}
+```
+
+### ATS Compatibility Check
+
+**Endpoint:** `POST /api/ats-check`
+
+**Request:**
+```typescript
+Content-Type: multipart/form-data
+Body: {
+  resume: File,
+  jobDescription?: string
+}
+```
+
+**Response:**
+```typescript
+{
+  score: number (0-100),
+  criticalIssues: [{ issue, fix }],
+  warnings: [{ issue, fix }],
+  passed: string[],
+  keywordAnalysis: {
+    matchedKeywords: string[],
+    missingKeywords: string[],
+    matchRate: number
+  } | null
+}
+```
+
+### Interview Questions Generation
+
+**Endpoint:** `POST /api/generate-interview-questions`
+
+**Request:**
+```typescript
+Content-Type: application/json
+Body: {
+  resumeText: string,
+  jobDescription?: string,
+  interviewType?: string
+}
+```
+
+**Response:**
+```typescript
+{
+  questions: [{
+    question: string,
+    category: string,
+    difficulty: "Easy" | "Medium" | "Hard"
+  }]
+}
+```
+
+### Answer Evaluation
+
+**Endpoint:** `POST /api/evaluate-answer`
+
+**Request:**
+```typescript
+Content-Type: application/json
+Body: {
+  question: string,
+  answer: string,
+  resumeText: string
+}
+```
+
+**Response:**
+```typescript
+{
+  feedback: string
+}
+```
+
+---
+
+## 🏗️ Architecture
+
+### AI Abstraction Layer
+
+The application uses a clean abstraction pattern for AI provider flexibility:
+
+```
+┌─────────────────────────────────────┐
+│         AIFactory                    │
+│  (Provider Selection Logic)          │
+└─────────────────────────────────────┘
+              │
+      ┌───────┴───────┐
+      ▼               ▼
+┌──────────┐    ┌──────────┐
+│  Groq    │    │ Gemini   │
+│ Provider │    │ Provider │
+└──────────┘    └──────────┘
+```
+
+**Benefits:**
+- ✅ Easy to switch AI providers (just change API key)
+- ✅ Easy to add new providers (implement interface)
+- ✅ No code changes needed when switching
+- ✅ Type-safe with TypeScript
+- ✅ Automatic fallback mechanism
+
+**Adding New Providers:**
+
+1. Create provider class:
+```typescript
+// src/lib/ai/providers/new-provider.ts
+export class NewProvider implements AIProvider {
+  async analyzeResume(resumeText: string): Promise<ResumeAnalysis> {
+    // Implementation
+  }
+  // ... other methods
+}
+```
+
+2. Update factory:
+```typescript
+// src/lib/ai/ai-factory.ts
+case "new-provider":
+  return new NewProvider(apiKey);
+```
+
+3. Add environment variable:
+```env
+NEW_PROVIDER_API_KEY=your_key
+```
+
+---
 
 ## 🚀 Deployment
 
-### Deploy on Vercel
+### Deploy on Vercel (Recommended)
 
-1. Push your code to GitHub
-2. Import your repository on [Vercel](https://vercel.com)
-3. Add environment variables in Vercel dashboard:
-   - `GROQ_API_KEY`
-   - `GEMINI_API_KEY` (optional)
-4. Deploy!
-
-### Environment Variables for Production
-
-Make sure to add these in your deployment platform:
-```env
-GROQ_API_KEY=your_production_groq_key
-GEMINI_API_KEY=your_production_gemini_key
+1. **Push to GitHub**
+```bash
+git add .
+git commit -m "Ready for deployment"
+git push origin main
 ```
+
+2. **Import to Vercel**
+- Go to [https://vercel.com](https://vercel.com)
+- Click "New Project"
+- Import your GitHub repository
+
+3. **Configure Environment Variables**
+
+Add in Vercel dashboard:
+```
+GROQ_API_KEY=your_production_key
+GEMINI_API_KEY=your_backup_key (optional)
+```
+
+4. **Deploy**
+- Click "Deploy"
+- Wait for build to complete
+- Your app is live! 🎉
+
+### Other Platforms
+
+**Netlify:**
+- Similar process to Vercel
+- Add environment variables in Netlify dashboard
+
+**Railway:**
+- Connect GitHub repository
+- Add environment variables
+- Deploy
+
+**Self-Hosted:**
+```bash
+npm run build
+npm start
+```
+
+---
 
 ## 📊 Performance
 
-- **Upload**: Instant (client-side validation)
-- **Text Extraction**: ~1-2 seconds
-- **Resume Validation**: ~1 second
-- **AI Analysis**: ~2-3 seconds
-- **Total Time**: ~4-6 seconds end-to-end
+| Feature | Time |
+|---------|------|
+| Resume Analysis | 4-6 seconds |
+| Cover Letter Generation | 5-8 seconds |
+| ATS Check | 3-5 seconds |
+| Interview Question Generation | 3-5 seconds |
+| Answer Evaluation | 2-3 seconds |
+
+**Optimizations:**
+- Efficient file parsing
+- Optimized AI prompts
+- Minimal API calls
+- Client-side validation
+
+---
 
 ## 🤖 Why Groq?
 
-- ✅ **100% FREE**: No credit card required, ever
-- ⚡ **Lightning Fast**: Fastest inference speed available
-- 🎯 **Accurate**: Llama 3.3 70B provides high-quality results
-- 📝 **Reliable**: Consistent JSON format responses
-- 🔒 **Secure**: Enterprise-grade infrastructure
+| Feature | Groq | Gemini | OpenAI |
+|---------|------|--------|--------|
+| **Cost** | FREE forever | FREE tier | $0.15/1M tokens |
+| **Speed** | Fastest ⚡ | Fast | Medium |
+| **Setup** | No credit card ✅ | Requires billing ❌ | Paid only ❌ |
+| **Model** | Llama 3.3 70B | Gemini 1.5 Flash | GPT-4 |
+| **Accuracy** | High | High | Very High |
 
-### AI Provider Comparison
+**Groq Advantages:**
+- ✅ 100% FREE (no credit card required)
+- ⚡ Lightning-fast inference
+- 🎯 High accuracy with Llama 3.3 70B
+- 📝 Reliable JSON responses
+- 🔒 Enterprise-grade infrastructure
 
-| Provider | Cost | Speed | Setup |
-|----------|------|-------|-------|
-| Groq | FREE forever | Fastest | No credit card ✅ |
-| Gemini | FREE tier | Fast | Requires billing ❌ |
-| OpenAI | $0.15/1M tokens | Medium | Paid only ❌ |
+---
+
+## 🔒 Security
+
+- ✅ API keys stored in `.env.local` (not in git)
+- ✅ File size validation (max 5MB)
+- ✅ File type validation (PDF, DOCX, TXT only)
+- ✅ Resume content validation
+- ✅ Input sanitization
+- ✅ Error handling for all API calls
+- ✅ Secure server-side processing
+- ✅ Content safety filters
+
+---
 
 ## 🛠️ Development
 
@@ -294,59 +635,117 @@ npm run lint
 npx shadcn@latest add [component-name]
 ```
 
-## 📝 API Documentation
+### Environment Variables
 
-### POST `/api/analyze-resume`
+```env
+# Required
+GROQ_API_KEY=your_groq_api_key
 
-**Request:**
-- Method: `POST`
-- Content-Type: `multipart/form-data`
-- Body: FormData with `resume` file
-
-**Response (Success):**
-```json
-{
-  "overallScore": 85,
-  "atsScore": 80,
-  "formattingScore": 90,
-  "contentScore": 85,
-  "keywordScore": 75,
-  "contactInfo": { ... },
-  "structure": { ... },
-  "content": { ... },
-  "atsCompatibility": { ... },
-  "quickWins": ["...", "..."],
-  "suggestions": ["...", "..."]
-}
+# Optional
+GEMINI_API_KEY=your_gemini_api_key
 ```
-
-**Response (Error):**
-```json
-{
-  "error": "Error message"
-}
-```
-
-## 🤝 Contributing
-
-Contributions are welcome! Please feel free to submit a Pull Request.
-
-## 📄 License
-
-This project is licensed under the MIT License.
-
-## 🙏 Acknowledgments
-
-- [Next.js](https://nextjs.org/) - React framework
-- [shadcn/ui](https://ui.shadcn.com/) - UI components
-- [Tailwind CSS](https://tailwindcss.com/) - CSS framework
-- [Groq](https://groq.com/) - AI inference
-- [Lucide](https://lucide.dev/) - Icons
-
-## 📧 Support
-
-For support, please open an issue in the GitHub repository.
 
 ---
 
-**Built with ❤️ using Next.js, TypeScript, and Groq AI**
+## 🤝 Contributing
+
+Contributions are welcome! Please follow these steps:
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
+
+### Contribution Guidelines
+
+- Follow TypeScript best practices
+- Write clean, readable code
+- Add comments for complex logic
+- Test your changes thoroughly
+- Update documentation if needed
+
+---
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- [Next.js](https://nextjs.org/) - The React Framework
+- [shadcn/ui](https://ui.shadcn.com/) - Beautiful UI Components
+- [Tailwind CSS](https://tailwindcss.com/) - Utility-First CSS
+- [Groq](https://groq.com/) - Lightning-Fast AI Inference
+- [Lucide](https://lucide.dev/) - Beautiful Icons
+- [Vercel](https://vercel.com/) - Deployment Platform
+
+---
+
+## 📧 Support
+
+Need help? Have questions?
+
+- 📖 Read the [User Manual](USER_MANUAL.md)
+- 📚 Check [Project Documentation](PROJECT_DOCUMENTATION.md)
+- 🐛 Open an [Issue](https://github.com/yourusername/job-application-assistant/issues)
+- 💬 Start a [Discussion](https://github.com/yourusername/job-application-assistant/discussions)
+
+---
+
+## 🎯 Roadmap
+
+### Completed ✅
+- [x] AI Resume Analyzer
+- [x] Cover Letter Generator
+- [x] ATS Optimization Tool
+- [x] Interview Preparation
+- [x] Dark/Light Mode
+- [x] Voice Recording
+- [x] Resume-Job Matching
+
+### Planned 🚧
+- [ ] Job Search Integration
+- [ ] Application Tracking
+- [ ] Salary Negotiation Tool
+- [ ] LinkedIn Integration
+- [ ] Email Templates
+- [ ] Analytics Dashboard
+- [ ] Mobile App
+
+---
+
+## 📸 Screenshots
+
+### Homepage
+![Homepage](screenshots/homepage.png)
+
+### Resume Analyzer
+![Resume Analyzer](screenshots/resume-analyzer.png)
+
+### Cover Letter Generator
+![Cover Letter](screenshots/cover-letter.png)
+
+### ATS Optimization
+![ATS Optimization](screenshots/ats-optimization.png)
+
+### Interview Preparation
+![Interview Prep](screenshots/interview-prep.png)
+
+---
+
+## 🌟 Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=yourusername/job-application-assistant&type=Date)](https://star-history.com/#yourusername/job-application-assistant&Date)
+
+---
+
+<div align="center">
+
+**Built with ❤️ using Next.js, TypeScript, and AI**
+
+[⬆ Back to Top](#job-application-assistant-)
+
+</div>

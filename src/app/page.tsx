@@ -41,31 +41,10 @@ export default function Home() {
               </span>
             </h1>
             
-            {/* Search/Input Box */}
-            <div className="max-w-3xl mx-auto">
-              <Card className="border-2">
-                <CardContent className="p-2">
-                  <div className="flex items-center gap-2">
-                    <Input 
-                      placeholder="What do you want to do today?"
-                      className="flex-1 border-0 text-lg px-4 py-6 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
-                    />
-                    <Button size="lg" className="rounded-xl px-8 h-14">
-                      <ArrowRight className="w-5 h-5" />
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
+
 
             {/* Quick Actions */}
             <div className="flex flex-wrap justify-center gap-3 pt-8">
-              <QuickAction href="/find-jobs" icon={<FileText className="w-4 h-4" />}>
-                Find jobs
-              </QuickAction>
-              <QuickAction href="/apply" icon={<Briefcase className="w-4 h-4" />}>
-                Apply for job
-              </QuickAction>
               <QuickAction href="/resume-analysis" icon={<Search className="w-4 h-4" />}>
                 Review resume
               </QuickAction>
@@ -74,6 +53,9 @@ export default function Home() {
               </QuickAction>
               <QuickAction href="/cover-letter" icon={<FileEdit className="w-4 h-4" />}>
                 Cover letter
+              </QuickAction>
+              <QuickAction href="/ats-optimization" icon={<FileText className="w-4 h-4" />}>
+                ATS Check
               </QuickAction>
             </div>
           </div>
@@ -105,20 +87,13 @@ export default function Home() {
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-2 lg:grid-cols-2 gap-8 max-w-4xl mx-auto">
               <FeatureCard
                 icon={<Sparkles className="w-7 h-7" />}
                 title="AI Resume Analysis"
-                description="Get instant feedback with ATS optimization"
+                description="Get instant feedback with detailed insights"
                 href="/resume-analysis"
                 buttonText="Analyze Now"
-              />
-              <FeatureCard
-                icon={<Search className="w-7 h-7" />}
-                title="Smart Job Matching"
-                description="Find opportunities that match your profile"
-                href="/job-matching"
-                buttonText="Find Jobs"
               />
               <FeatureCard
                 icon={<FileEdit className="w-7 h-7" />}
@@ -141,58 +116,18 @@ export default function Home() {
                 href="/ats-optimization"
                 buttonText="Optimize Resume"
               />
-              <FeatureCard
-                icon={<Briefcase className="w-7 h-7" />}
-                title="Application Tracking"
-                description="Manage all applications in one place"
-                href="/dashboard"
-                buttonText="View Dashboard"
-              />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* CTA Section */}
-      <section className="relative py-32 border-t border-border">
-        <div className="container">
-          <Card className="max-w-4xl mx-auto border-2">
-            <CardContent className="text-center space-y-8 py-16">
-              <Badge variant="outline" className="border-2">
-                Get Started
-              </Badge>
-              <h2 className="text-4xl md:text-6xl font-bold">
-                <span className="bg-gradient-to-b from-foreground to-muted-foreground bg-clip-text text-transparent">
-                  Start your journey today
-                </span>
-              </h2>
-              <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-                Join thousands using AI to accelerate their career
-              </p>
-              <Button size="lg" className="text-lg h-14 px-10">
-                Get Started
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </section>
 
       {/* Footer */}
       <footer className="border-t border-border py-12">
         <div className="container">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex justify-center items-center">
             <p className="text-sm text-muted-foreground">
               © {new Date().getFullYear()} Job Application Assistant. All rights reserved.
             </p>
-            <Separator className="md:hidden" />
-            <div className="flex gap-6 text-sm text-muted-foreground">
-              <Link href="/privacy" className="hover:text-foreground transition-colors">Privacy</Link>
-              <Separator orientation="vertical" className="h-4" />
-              <Link href="/terms" className="hover:text-foreground transition-colors">Terms</Link>
-              <Separator orientation="vertical" className="h-4" />
-              <Link href="/about" className="hover:text-foreground transition-colors">About</Link>
-            </div>
           </div>
         </div>
       </footer>

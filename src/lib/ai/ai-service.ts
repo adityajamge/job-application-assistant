@@ -6,6 +6,7 @@ export interface AIProvider {
   analyzeInterviewTypes(resumeText: string, jobDescription?: string): Promise<InterviewTypeAnalysis>;
   generateInterviewQuestions(data: InterviewQuestionsRequest): Promise<InterviewQuestionsResponse>;
   evaluateAnswer(data: EvaluateAnswerRequest): Promise<EvaluateAnswerResponse>;
+  checkATSCompatibility(resumeText: string, jobDescription?: string): Promise<ATSCheckResponse>;
 }
 
 export interface ResumeAnalysis {
@@ -107,4 +108,23 @@ export interface EvaluateAnswerRequest {
 
 export interface EvaluateAnswerResponse {
   feedback: string;
+}
+
+export interface ATSIssue {
+  issue: string;
+  fix: string;
+}
+
+export interface KeywordAnalysis {
+  matchedKeywords: string[];
+  missingKeywords: string[];
+  matchRate: number;
+}
+
+export interface ATSCheckResponse {
+  score: number;
+  criticalIssues: ATSIssue[];
+  warnings: ATSIssue[];
+  passed: string[];
+  keywordAnalysis: KeywordAnalysis | null;
 }

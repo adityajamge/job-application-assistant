@@ -441,7 +441,7 @@ function AnalysisSection({
       <CardContent className="p-6">
         <h3 className="text-lg font-semibold mb-4">{title}</h3>
         <div className="space-y-3">
-          {data.items.map((item, index) => (
+          {data?.items?.map((item, index) => (
             <div key={index} className="flex items-start gap-3">
               {item.present ? (
                 <CheckCircle2 className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />
